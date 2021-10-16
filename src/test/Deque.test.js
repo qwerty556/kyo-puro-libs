@@ -19,17 +19,18 @@ const DequeProtType = {
         return node_ ? node_.value : node_
     },
     push(item){
-        if(this.last) this.last = this.last.next = {value:item,before:this.last}
+        if(this.length) this.last = this.last.next = {value:item,before:this.last}
         else this.first = this.last = {value:item}
         this.length++
     },
     unshift(item){
-        if(this.first) this.first = this.first.before = {value:item,next:this.first}
+        if(this.length) this.first = this.first.before = {value:item,next:this.first}
         else this.first = this.last = {value:item}
         this.length++
     },
     pop(){
         if(!this.length) return undefined
+        if(this.length === 1) return this.shift()
         const item = this.last.value
         this.last = this.last.before
         if(this.last) this.last.next = undefined
@@ -146,44 +147,55 @@ describe('Dequeテスト', () => {
         [unshift,push,unshift,shift,pop],
         [unshift,push,push,pop,shift,pop],
 
-    ].map(case_=>[case_,shuffle(case_)]).flat(1)
+    ].map(case_=>[case_,shuffle(case_),shuffle(case_),shuffle(case_),shuffle(case_)]).flat(1)
 
     
+    let i = 1
     ptn().forEach((cases)=>{
-        let i = 1
-        cases.forEach((case_)=>{
-            test('case_1.' + i++, ()=>{
-                const d = Deque([])
+        test('case_1.' + i++, ()=>{
+            const d = Deque([])
+            cases.forEach((case_)=>{
                 case_(d)
             })
         })
     })
 
+    
+    i = 1
     ptn().forEach((cases)=>{
-        let i = 1
-        cases.forEach((case_)=>{
-            test('case_2.' + i++, ()=>{
-                const d = Deque([1,2])
+        test('case_2.' + i++, ()=>{
+            const d = Deque([1])
+            cases.forEach((case_)=>{
                 case_(d)
             })
         })
     })
 
+    i = 1
     ptn().forEach((cases)=>{
-        let i = 1
-        cases.forEach((case_)=>{
-            test('case_3.' + i++, ()=>{
-                const d = Deque([1,2,3])
+        test('case_3.' + i++, ()=>{
+            const d = Deque([1,2])
+            cases.forEach((case_)=>{
                 case_(d)
             })
         })
     })
 
+    i = 1
     ptn().forEach((cases)=>{
-        let i = 1
-        cases.forEach((case_)=>{
-            test('case_4.' + i++, ()=>{
-                const d = Deque(shuffle([1,2,3,1,2,3,1,2,3,1,2,3]))
+        test('case_4.' + i++, ()=>{
+            const d = Deque([1,2,3])
+            cases.forEach((case_)=>{
+                case_(d)
+            })
+        })
+    })
+
+    i = 1
+    ptn().forEach((cases)=>{
+        test('case_5.' + i++, ()=>{
+            const d = Deque(shuffle([1,2,3,1,2,3,1,2,3,1,2,3]))
+            cases.forEach((case_)=>{
                 case_(d)
             })
         })

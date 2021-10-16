@@ -57,17 +57,18 @@ Array.tableCycle=(doubleArray)=>{
             return node_ ? node_.value : node_
         },
         push(item){
-            if(this.last) this.last = this.last.next = {value:item,before:this.last}
+            if(this.length) this.last = this.last.next = {value:item,before:this.last}
             else this.first = this.last = {value:item}
             this.length++
         },
         unshift(item){
-            if(this.first) this.first = this.first.before = {value:item,next:this.first}
+            if(this.length) this.first = this.first.before = {value:item,next:this.first}
             else this.first = this.last = {value:item}
             this.length++
         },
         pop(){
             if(!this.length) return undefined
+            if(this.length === 1) return this.shift()
             const item = this.last.value
             this.last = this.last.before
             if(this.last) this.last.next = undefined
