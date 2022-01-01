@@ -14,9 +14,10 @@ const DequeProtType = {
         }
     },
     get(i){
+        if(!this.length) return undefined
         let node_ = this.first
         while(i-- && node_ && (node_ = node_.next));
-        return node_ ? node_.value : node_
+        return node_ ? node_.value : node_  
     },
     push(item){
         if(this.length) this.last = this.last.next = {value:item,before:this.last}
@@ -29,19 +30,25 @@ const DequeProtType = {
         this.length++
     },
     pop(){
-        if(!this.length) return undefined
+        if(this.length === 0) return undefined
         if(this.length === 1) return this.shift()
         const item = this.last.value
         this.last = this.last.before
-        if(this.last) this.last.next = undefined
+        this.last.next = undefined
         this.length--
         return item
     },
     shift(){
-        if(!this.length) return undefined
+        if(this.length === 0) return undefined
+        if(this.length === 1) {
+            const item = this.first.value 
+            this.first = this.last = undefined
+            this.length--
+            return item
+        }
         const item = this.first.value
         this.first = this.first.next
-        if(this.first) this.first.before = undefined
+        this.first.before = undefined
         this.length--
         return item
     },
@@ -62,10 +69,35 @@ const Deque = (arr) => {
     return obj
 }
 
-describe('Dequeテスト', () => {
+describe('Dequeテスト:get,iterator', () => {
+    let i = 1
+    test('case_' + i++, ()=>{
+        const arr = [1,2,3,4,5]
+        const d = Deque([...arr])
+        arr.forEach((item,index)=>{
+            expect(d.get(index)).toBe(item)
+        })
+        expect([...d]).toStrictEqual(arr)
+    })
 
-    const unshift = (d) => {
-        const arr = [...d]
+    test('case_' + i++ + ':存在しないインデックス1', ()=>{
+        const arr = []
+        const d = Deque([...arr])
+        expect(d.get(0)).toBe(undefined)
+        expect([...d]).toStrictEqual(arr)
+    })
+
+    test('case_' + i++ + ':存在しないインデックス2', ()=>{
+        const arr = [1,2,3,4,5]
+        const d = Deque([...arr])
+        expect(d.get(10)).toBe(undefined)
+        expect([...d]).toStrictEqual(arr)
+    })
+})
+
+describe('Dequeテスト:shift,unshift,push,pop', () => {
+
+    const unshift = (d,arr) => {
         expect([...d]).toStrictEqual(arr)
         expect(d.length).toBe(arr.length)
 
@@ -76,8 +108,7 @@ describe('Dequeテスト', () => {
         expect(d.length).toBe(arr.length)
     }
 
-    const push = (d) => {
-        const arr = [...d]
+    const push = (d,arr) => {
         expect([...d]).toStrictEqual(arr)
         expect(d.length).toBe(arr.length)
 
@@ -88,8 +119,7 @@ describe('Dequeテスト', () => {
         expect(d.length).toBe(arr.length)
     }
 
-    const shift = (d) => {
-        const arr = [...d]
+    const shift = (d,arr) => {
         expect([...d]).toStrictEqual(arr)
         expect(d.length).toBe(arr.length)
 
@@ -99,8 +129,7 @@ describe('Dequeテスト', () => {
         expect(d.length).toBe(arr.length)
     }
 
-    const pop = (d) => {
-        const arr = [...d]
+    const pop = (d,arr) => {
         expect([...d]).toStrictEqual(arr)
         expect(d.length).toBe(arr.length)
 
@@ -147,56 +176,56 @@ describe('Dequeテスト', () => {
         [unshift,push,unshift,shift,pop],
         [unshift,push,push,pop,shift,pop],
 
-    ].map(case_=>[case_,shuffle(case_),shuffle(case_),shuffle(case_),shuffle(case_)]).flat(1)
+    ].map(case_=>[case_,shuffle(case_)]).flat(1)
 
     
     let i = 1
-    ptn().forEach((cases)=>{
-        test('case_1.' + i++, ()=>{
-            const d = Deque([])
+    test('case_' + i++, ()=>{
+        ptn().forEach((cases)=>{
+            const arr = []
+            const d = Deque([...arr])
             cases.forEach((case_)=>{
-                case_(d)
+                case_(d,arr)
             })
         })
     })
-
     
-    i = 1
-    ptn().forEach((cases)=>{
-        test('case_2.' + i++, ()=>{
-            const d = Deque([1])
+    test('case_' + i++, ()=>{
+        ptn().forEach((cases)=>{
+            const arr = [1]
+            const d = Deque([...arr])
             cases.forEach((case_)=>{
-                case_(d)
+                case_(d,arr)
             })
         })
     })
 
-    i = 1
-    ptn().forEach((cases)=>{
-        test('case_3.' + i++, ()=>{
-            const d = Deque([1,2])
+    test('case_' + i++, ()=>{
+        ptn().forEach((cases)=>{
+            const arr = [1,2]
+            const d = Deque([...arr])
             cases.forEach((case_)=>{
-                case_(d)
+                case_(d,arr)
             })
         })
     })
 
-    i = 1
-    ptn().forEach((cases)=>{
-        test('case_4.' + i++, ()=>{
-            const d = Deque([1,2,3])
+    test('case_' + i++, ()=>{
+        ptn().forEach((cases)=>{
+            const arr = [1,2,3]
+            const d = Deque([...arr])
             cases.forEach((case_)=>{
-                case_(d)
+                case_(d,arr)
             })
         })
     })
 
-    i = 1
-    ptn().forEach((cases)=>{
-        test('case_5.' + i++, ()=>{
-            const d = Deque(shuffle([1,2,3,1,2,3,1,2,3,1,2,3]))
+    test('case_' + i++, ()=>{
+        ptn().forEach((cases)=>{
+            const arr = [1,2,3,5,6,7,8,9,0,9,8,7]
+            const d = Deque([...arr])
             cases.forEach((case_)=>{
-                case_(d)
+                case_(d,arr)
             })
         })
     })

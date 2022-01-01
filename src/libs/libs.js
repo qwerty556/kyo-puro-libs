@@ -1,3 +1,5 @@
+
+
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 
@@ -36,69 +38,76 @@ Array.tableCycle=(doubleArray)=>{
         return res
     }
     
-    const DequeProtType = {
-        length:0,
-        first:undefined,
-        last:undefined,
-        [Symbol.iterator]:function(){
-            const f = this.first
-            return {
-                current : {next:f},
-                next(){
-                    return (this.current = this.current.next) 
-                        ? {value: this.current.value, done: false}
-                        : {done: true}
-                }
+const DequeProtType = {
+    length:0,
+    first:undefined,
+    last:undefined,
+    [Symbol.iterator]:function(){
+        const f = this.first
+        return {
+            current : {next:f},
+            next(){
+                return (this.current = this.current.next) 
+                    ? {value: this.current.value, done: false}
+                    : {done: true}
             }
-        },
-        get(i){
-            let node_ = this.first
-            while(i-- && node_ && (node_ = node_.next));
-            return node_ ? node_.value : node_
-        },
-        push(item){
-            if(this.length) this.last = this.last.next = {value:item,before:this.last}
-            else this.first = this.last = {value:item}
-            this.length++
-        },
-        unshift(item){
-            if(this.length) this.first = this.first.before = {value:item,next:this.first}
-            else this.first = this.last = {value:item}
-            this.length++
-        },
-        pop(){
-            if(!this.length) return undefined
-            if(this.length === 1) return this.shift()
-            const item = this.last.value
-            this.last = this.last.before
-            if(this.last) this.last.next = undefined
-            this.length--
-            return item
-        },
-        shift(){
-            if(!this.length) return undefined
-            const item = this.first.value
-            this.first = this.first.next
-            if(this.first) this.first.before = undefined
-            this.length--
-            return item
-        },
-    }
-    
-    const Deque = (arr) => {
-        const arrToNode = (arr) => {
-            return arr.map(_=>({value:_})).map((_,i,arr_)=>{
-                _.next = arr_[i + 1]
-                _.before = arr_[i - 1]
-                return _
-            })
         }
-        const node = arrToNode(arr)
-        const obj = Object.assign(Object.create(DequeProtType),{
-            first:node[0],last:node[node.length - 1],length:node.length
+    },
+    get(i){
+        if(!this.length) return undefined
+        let node_ = this.first
+        while(i-- && node_ && (node_ = node_.next));
+        return node_ ? node_.value : node_  
+    },
+    push(item){
+        if(this.length) this.last = this.last.next = {value:item,before:this.last}
+        else this.first = this.last = {value:item}
+        this.length++
+    },
+    unshift(item){
+        if(this.length) this.first = this.first.before = {value:item,next:this.first}
+        else this.first = this.last = {value:item}
+        this.length++
+    },
+    pop(){
+        if(this.length === 0) return undefined
+        if(this.length === 1) return this.shift()
+        const item = this.last.value
+        this.last = this.last.before
+        this.last.next = undefined
+        this.length--
+        return item
+    },
+    shift(){
+        if(this.length === 0) return undefined
+        if(this.length === 1) {
+            const item = this.first.value 
+            this.first = this.last = undefined
+            this.length--
+            return item
+        }
+        const item = this.first.value
+        this.first = this.first.next
+        this.first.before = undefined
+        this.length--
+        return item
+    },
+}
+
+const Deque = (arr) => {
+    const arrToNode = (arr) => {
+        return arr.map(_=>({value:_})).map((_,i,arr_)=>{
+            _.next = arr_[i + 1]
+            _.before = arr_[i - 1]
+            return _
         })
-        return obj
     }
+    const node = arrToNode(arr)
+    const obj = Object.assign(Object.create(DequeProtType),{
+        first:node[0],last:node[node.length - 1],length:node.length
+    })
+    return obj
+}
 
 
 Math.sum = (...nums)=>nums.reduce((total,n)=>total+n,0)
@@ -106,10 +115,10 @@ Math.between = (start,end) => (target) => start <= target && target <= end
 
 //ここまでlibs
 
-const lines = require("fs")
-    .readFileSync("/dev/stdin", "utf8")
-    .split("\n")
-    .pipe(Deque)
+// const lines = require("fs")
+//     .readFileSync("/dev/stdin", "utf8")
+//     .split("\n")
+//     .pipe(Deque)
 
 
 
