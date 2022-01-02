@@ -109,16 +109,84 @@ const Deque = (arr) => {
     return obj
 }
 
+/**
+ * option.order ? 並び順を保証する : 並び順を保証しない
+ * 
+ * option.firstLastWin ? 先勝ち : 後勝ち
+ * 
+ * option.prop ? 特定のプロパティによりユニーク判定する : 
+ * 
+ * ユニーク処理の比較対象はプリミティブ型である必要がある
+ */
+Array.uniq = (arr,option) => {
+    const option__ = Object.assign({},{order:false, firstLastWin:false, prop:undefined},option)
+    if(option__.order && option__.prop){
+        let itemAndIndexs = arr.map(((item,index) => ({item,index}))).map(_ => [_.item[option__.prop],_])
+        itemAndIndexs = option__.firstLastWin ? itemAndIndexs.reverse() : itemAndIndexs
+        return Array.from(new Map(itemAndIndexs).values()).sort((a,b) => a.index - b.index).map(_ => _.item)
+    }else if(option__.order && !option__.prop){
+        let items = arr.map(((item,index) => ({item,index}))).map(_ => [_.item,_])
+        items = option__.firstLastWin ? items.reverse() : items
+        return Array.from(new Map(items).values()).sort((a,b) => a.index - b.index).map(_ => _.item)
+    }else if(!option__.order && option__.prop){
+        let items = arr.map(_ => [_[option__.prop],_])
+        items = option__.firstLastWin ? items.reverse() : items
+        return Array.from(new Map(items).values())
+    }else if(!option__.order && !option__.prop){
+        let items = arr
+        items = option__.firstLastWin ? items.reverse() : items
+        return Array.from(new Set(items).values())
+    }
+}
+
+Array.binarySearchFirst = (sortedArr,target,compare) => {
+    let i = -1
+    let l = 0
+    let r = sortedArr.length - 1
+    while (l <= r) {
+        const m = Math.floor((l + r) / 2);
+        const compared = compare(sortedArr[m],target)
+        if (compared === 0) {
+            i = m
+            r = m - 1
+        } else if (compared < 0) {
+            l = m + 1;
+        } else {
+            r = m - 1;
+        }
+    }
+    return i
+}
+
+Array.binarySearchLast = (sortedArr,target,compare) => {
+    let i = -1
+    let l = 0
+    let r = sortedArr.length - 1
+    while (l <= r) {
+        const m = Math.floor((l + r) / 2);
+        const compared = compare(sortedArr[m],target)
+        if (compared === 0) {
+            i = m
+            l = m + 1
+        } else if (compared < 0) {
+            l = m + 1
+        } else {
+            r = m - 1
+        }
+    }
+    return i
+}
+
 
 Math.sum = (...nums)=>nums.reduce((total,n)=>total+n,0)
 Math.between = (start,end) => (target) => start <= target && target <= end
 
 //ここまでlibs
 
-// const lines = require("fs")
-//     .readFileSync("/dev/stdin", "utf8")
-//     .split("\n")
-//     .pipe(Deque)
+const lines = require("fs")
+    .readFileSync("/dev/stdin", "utf8")
+    .split("\n")
+    .pipe(Deque)
 
 
 
