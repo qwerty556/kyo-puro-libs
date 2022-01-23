@@ -10,7 +10,7 @@ Array.prototype.pluck = function(prop){return this.map(obj=>obj[prop])}
 
 Array.range = (start,end)=>{
         const [small,big] = [start,end].sort((a,b)=>a-b)
-        const arr = Array.from({length:Math.abs(big - small) + 1},(_,i)=> i + small)
+        const arr = Array.from({length:big - small + 1},(_,i)=> i + small)
         return start > end ? arr.reverse() : arr
     }
 
@@ -114,12 +114,12 @@ const Deque = (arr) => {
  * 
  * option.firstLastWin ? 先勝ち : 後勝ち
  * 
- * option.prop ? 特定のプロパティによりユニーク判定する : 
+ * option.prop ? 特定のプロパティによりユニーク判定する : arr[n] によりユニーク判定する
  * 
  * ユニーク処理の比較対象はプリミティブ型である必要がある
  */
 Array.uniq = (arr,option) => {
-    const option__ = Object.assign({},{order:false, firstLastWin:false, prop:undefined},option)
+    const option__ = Object.assign({order:false, firstLastWin:false, prop:undefined},option)
     if(option__.order && option__.prop){
         let itemAndIndexs = arr.map(((item,index) => ({item,index}))).map(_ => [_.item[option__.prop],_])
         itemAndIndexs = option__.firstLastWin ? itemAndIndexs.reverse() : itemAndIndexs

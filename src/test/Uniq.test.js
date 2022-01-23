@@ -1,34 +1,26 @@
-
 /**
  * option.order ? 並び順を保証する : 並び順を保証しない
  * 
  * option.firstLastWin ? 先勝ち : 後勝ち
  * 
- * option.prop ? 特定のプロパティによりユニーク判定する : 
+ * option.prop ? 特定のプロパティによりユニーク判定する : arr[n] によりユニーク判定する
  * 
  * ユニーク処理の比較対象はプリミティブ型である必要がある
  */
-Array.uniq = (arr,option) => {
-    const option__ = Object.assign({},{order:false, firstLastWin:false, prop:undefined},option)
-
+ Array.uniq = (arr,option) => {
+    const option__ = Object.assign({order:false, firstLastWin:false, prop:undefined},option)
     if(option__.order && option__.prop){
-
         let itemAndIndexs = arr.map(((item,index) => ({item,index}))).map(_ => [_.item[option__.prop],_])
         itemAndIndexs = option__.firstLastWin ? itemAndIndexs.reverse() : itemAndIndexs
         return Array.from(new Map(itemAndIndexs).values()).sort((a,b) => a.index - b.index).map(_ => _.item)
-
     }else if(option__.order && !option__.prop){
-
         let items = arr.map(((item,index) => ({item,index}))).map(_ => [_.item,_])
         items = option__.firstLastWin ? items.reverse() : items
         return Array.from(new Map(items).values()).sort((a,b) => a.index - b.index).map(_ => _.item)
-
     }else if(!option__.order && option__.prop){
-
         let items = arr.map(_ => [_[option__.prop],_])
         items = option__.firstLastWin ? items.reverse() : items
         return Array.from(new Map(items).values())
-
     }else if(!option__.order && !option__.prop){
         let items = arr
         items = option__.firstLastWin ? items.reverse() : items

@@ -50,6 +50,10 @@ describe('binarySearchFirstテスト', () => {
         expect(binarySearchFirst([1,2,3,4,5,6,7,8,9],1)).toBe(0)
         expect(binarySearchFirst([1,2,3,4,5,6,7,8,9],9)).toBe(8)
         expect(binarySearchFirst([1,2,3,4,5,6,7,8,9],5)).toBe(4)
+
+        
+        expect(binarySearchFirst([0,0,1,1,1,1,2,2,3],2)).toBe(6)
+        expect(binarySearchFirst([0,0,1,1,1,1,2,2,3],0)).toBe(0)
     })
 })
 
@@ -58,12 +62,15 @@ describe('binarySearchLastテスト', () => {
     test('case_' + i++, ()=>{
         const binarySearchLast = (sorted,target) => Array.binarySearchLast(sorted,target,(a,b) => a - b)
         expect(binarySearchLast([1,1,1],1)).toBe(2)
-        expect(binarySearchLast([1,1,0],1)).toBe(1)
-        expect(binarySearchLast([1,1,1,0,0],1)).toBe(2)
+        expect(binarySearchLast([1,1,2],1)).toBe(1)
+        expect(binarySearchLast([1,1,1,2,2],1)).toBe(2)
         expect(binarySearchLast([],1)).toBe(-1)
         expect(binarySearchLast([1,2,3,4,5,6,7,8,9],0)).toBe(-1)
         expect(binarySearchLast([1,2,3,4,5,6,7,8,9],1)).toBe(0)
         expect(binarySearchLast([1,2,3,4,5,6,7,8,9],9)).toBe(8)
         expect(binarySearchLast([1,2,3,4,5,6,7,8,9],5)).toBe(4)
+
+        expect(binarySearchLast([0,0,1,1,1,1,2,2,3],2)).toBe(7)
+        expect(binarySearchLast([0,0,1,1,1,1,2,2,3],0)).toBe(1)
     })
 })
