@@ -10,20 +10,30 @@
  Array.uniq = (arr,option) => {
     const option__ = Object.assign({order:false, firstLastWin:false, prop:undefined},option)
     if(option__.order && option__.prop){
-        let itemAndIndexs = arr.map(((item,index) => ({item,index}))).map(_ => [_.item[option__.prop],_])
-        itemAndIndexs = option__.firstLastWin ? itemAndIndexs.reverse() : itemAndIndexs
-        return Array.from(new Map(itemAndIndexs).values()).sort((a,b) => a.index - b.index).map(_ => _.item)
+        const set = new Set()
+        const reduceCallbackfn = (uniqArr,item) => {
+            if(!set.has(item[option__.prop])){
+                set.add(item[option__.prop])
+                uniqArr.push(item)
+            }
+            return uniqArr
+        }
+        return (option__.firstLastWin ? arr.reduce(reduceCallbackfn,[]) : arr.reduceRight(reduceCallbackfn,[]).reverse())
     }else if(option__.order && !option__.prop){
-        let items = arr.map(((item,index) => ({item,index}))).map(_ => [_.item,_])
-        items = option__.firstLastWin ? items.reverse() : items
-        return Array.from(new Map(items).values()).sort((a,b) => a.index - b.index).map(_ => _.item)
+        const set = new Set()
+        const reduceCallbackfn = (uniqArr,item) => {
+            if(!set.has(item)){
+                set.add(item)
+                uniqArr.push(item)
+            }
+            return uniqArr
+        }
+        return (option__.firstLastWin ? arr.reduce(reduceCallbackfn,[]) : arr.reduceRight(reduceCallbackfn,[]).reverse())
     }else if(!option__.order && option__.prop){
-        let items = arr.map(_ => [_[option__.prop],_])
-        items = option__.firstLastWin ? items.reverse() : items
-        return Array.from(new Map(items).values())
+        const items = (option__.firstLastWin ? arr.reverse() : arr)
+        return Array.from(new Map(items.map(_ => [_[option__.prop],_])).values())
     }else if(!option__.order && !option__.prop){
-        let items = arr
-        items = option__.firstLastWin ? items.reverse() : items
+        const items = option__.firstLastWin ? arr.reverse() : arr
         return Array.from(new Set(items).values())
     }
 }
